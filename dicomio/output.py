@@ -5,6 +5,32 @@ import os
 import json
 import argparse
 
+def compute_slices(src):
+    """    
+    Reads input DICOM directory and computes slices.
+    Sorts the slices by SliceLocation
+
+    Parameters
+    ----------
+    src : str
+
+    Returns
+    -------
+    slices : list
+    """
+    slices = [] 
+
+    for dicom_file in os.listdir(src):
+        if dicom_file.endswith('dcm'):
+            fpath = os.path.join(src, dicom_file)
+            with open(fpath, 'rb') as infile:
+                ds = dcmread(infile)
+                elem = ds.SliceLocation
+                slices.append(ds)
+
+    slices.sort(key = lambda s:s.SliceLocation)
+    return slices 
+
 def update_volume_and_write(slices, volume, output):
     """    
     Builds updated data by modifying pixel array and generating new ids.
@@ -20,6 +46,10 @@ def update_volume_and_write(slices, volume, output):
     -------
     
     """
+
+    if not os.path.isdir(output):
+        os.makedirs(output)
+
     #perform rescaling
     volume = volume * 255 
     volume = np.asarray(volume, slices[0].pixel_array.dtype)
@@ -52,32 +82,6 @@ def update_volume_and_write(slices, volume, output):
         pathdir = os.path.join(output, filename)
         slice.save_as(pathdir)
 
-def compute_slices(src):
-    """    
-    Reads input DICOM directory and computes slices.
-    Sorts the slices by SliceLocation
-
-    Parameters
-    ----------
-    src : str
-
-    Returns
-    -------
-    slices : list
-    """
-    slices = [] 
-
-    for dicom_file in os.listdir(src):
-        if dicom_file.endswith('dcm'):
-            fpath = os.path.join(src, dicom_file)
-            with open(fpath, 'rb') as infile:
-                ds = dcmread(infile)
-                elem = ds.SliceLocation
-                slices.append(ds)
-
-    slices.sort(key = lambda s:s.SliceLocation)
-    return slices 
-
 def process(numpy_file=None, inputfile=None, outputfile=None):
     """    
     Runs pre-processing on input numpy file and DICOM directory
@@ -97,10 +101,8 @@ def process(numpy_file=None, inputfile=None, outputfile=None):
     mapping  = compute_slices(inputfile)
     arr = np.load(numpy_file) 
 
-    if not os.path.isdir(outputfile):
-        os.makedirs(outputfile)
 
-    update_volume_and_write(mapping,arr, outputfile)
+    update_volume_and_write(mapping, arr, outputfile)
 
 
 if __name__ == '__main__':

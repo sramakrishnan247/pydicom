@@ -1,5 +1,6 @@
 from pydicom import dcmread,uid
 from collections import defaultdict
+from dicomio import input
 import numpy as np
 import os
 import json
@@ -26,8 +27,6 @@ def is_valid(slice, config):
             return False
     return True
 
-
-
 def filter_mapping(slices, config):
     """    
     Filters slices by config 
@@ -41,40 +40,12 @@ def filter_mapping(slices, config):
     -------
     valid_slices : list 
     """ 
-
     valid_slices = []
     for i,slice in enumerate(slices):
         if is_valid(slice, config):
             valid_slices.append(slice)
     
     return valid_slices
-
-
-
-def compute_slices(src):
-    """    
-    Reads input DICOM directory and computes slices.
-    Sorts the slices by SliceLocation
-
-    Parameters
-    ----------
-    src : str
-
-    Returns
-    -------
-    slices : list
-    """
-    slices = [] 
-
-    for dicom_file in os.listdir(src):
-        if dicom_file.endswith('dcm'):
-            fpath = os.path.join(src, dicom_file)
-            with open(fpath, 'rb') as infile:
-                ds = dcmread(infile)
-                elem = ds.SliceLocation
-                slices.append(ds)
-
-    return slices 
 
 def process(inputfile=None, configfile=None, outputfile=None):
     """   
@@ -90,7 +61,7 @@ def process(inputfile=None, configfile=None, outputfile=None):
     -------
     mapping : list
     """
-    mapping  = compute_slices(inputfile)
+    mapping  = input.compute_slices(inputfile)
 
     config = {}
     with open(configfile) as json_file:

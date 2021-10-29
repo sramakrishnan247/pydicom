@@ -34,6 +34,60 @@ def compute_volume(mapping):
     volume = np.asarray(volume, dtype=np.float32)
     return volume
 
+def compute_volume_from_slices(slices):
+    """    
+    Builds a 3D volume by sorting against each file's Slice Location  
+    DICOM tag in ascending order. 
+    
+    Normalizes the 3D volume to range between 0 and 1, 
+    converting the data from the input data type to 32-bit float 
+    data type.
+    
+    Parameters
+    ----------
+    slices : list 
+
+    Returns
+    -------
+    volume : np.array
+    
+    """
+    volume = []
+    for ds in slices:
+        arr = ds.pixel_array
+        max_val = np.max(arr)
+        min_val = np.min(arr)
+        arr = (arr - min_val)/max_val
+        volume.append(arr)
+    volume = np.asarray(volume, dtype=np.float32)
+    return volume
+
+def compute_slices(src):
+    """    
+    Reads input DICOM directory and computes slices.
+    Sorts the slices by SliceLocation
+
+    Parameters
+    ----------
+    src : str
+
+    Returns
+    -------
+    slices : list
+    """
+    slices = [] 
+
+    for dicom_file in os.listdir(src):
+        if dicom_file.endswith('dcm'):
+            fpath = os.path.join(src, dicom_file)
+            with open(fpath, 'rb') as infile:
+                ds = dcmread(infile)
+                elem = ds.SliceLocation
+                slices.append(ds)
+
+    slices.sort(key = lambda s:s.SliceLocation)
+    return slices 
+
 def compute_mapping(src):
     """    
     Reads a src DICOM directory and creates a dictionary to identify 

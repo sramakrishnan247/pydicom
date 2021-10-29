@@ -1,5 +1,10 @@
 .DS_Store
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+dataset*
 coding_challenge_dicom_data.zip
 dicom_data*
 dicom_copy*
