@@ -103,14 +103,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input-dicom", dest="src", help="path to input DICOM directory")
     parser.add_argument("-n", "--output-npy", dest="numpy_file", required=True, help="path to output numpy file")
-    parser.add_argument("-j", "--output-json", dest="json_file", required=True, help="path to output numpy file")
+    parser.add_argument("-j", "--output-json", dest="json_file", required=True, help="path to output json file")
     
     # Test sample    
-    # sample = [  '-i', './dicom_data/16_PETCT_Brain/Full',
-    #             '-n', 'pixel_numpy.npy',  
-    #             '-j','output.json']
+    sample = [  '-i', 'dicom_data/01_BreastMriNactPilot/Mr_Breast - 148579/SagittalIR_3DFGRE_3',
+                '-n', 'pixel_numpy.npy',  
+                '-j','output.json']
 
-    # args = parser.parse_args(sample)
-    args = parser.parse_args()
+    args = parser.parse_args(sample)
+    # args = parser.parse_args()
     arr = process(args.src, args.numpy_file, args.json_file)
     
