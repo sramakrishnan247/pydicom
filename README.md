@@ -1,4 +1,4 @@
-### How to run?
+### Instructions:
 
        docker build --pull --rm -f "Dockerfile" -t dicom_parser:latest "."
           
