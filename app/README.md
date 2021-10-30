@@ -1,0 +1,1 @@
+docker run -v /Users/ram/Desktop/SubtleMedical_SoftwareEng_CodingChallenge/dataset:/app/dataset subtlemedicalsoftwareengcodingchallenge python3 pipeline.py -d ./dataset/test_sample -c ./dataset/config.json -o ./dataset/test_output2/
