@@ -1,24 +1,3 @@
-Setup the following directory structure
-The dataset needs to be copied to the correct path
-
-Directory structure:
-    Project 
-        - app
-            blur.py
-            dicom_input.py
-            dicom_output.py
-            filter.py
-            pipeline.py
-        - dataset
-            dicom_data/
-                1.dcm
-                2.dcm
-                3.dcm
-            config.json
-        README.md
-        requirements.txt
-        Dockerfile
-
 How to run?
 1. Build Docker Image
 
