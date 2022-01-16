@@ -1,3 +1,6 @@
+### About:
+Tool for handling Medical data(DICOM)
+
 ### Instructions:
 
        docker build --pull --rm -f "Dockerfile" -t dicom_parser:latest "."
